@@ -81,14 +81,17 @@ mongo                                    - name of the image to run;
 ## User Authentication Service
 
 **SQL Server Set-up for the User Authentication Database**
+
 ` docker pull mcr.microsoft.com/mssql/server
 
 ` docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=password@1234" -p 2433:1433 --name sqlserverdb -d mcr.microsoft.com/mssql/server
 ` docker ps -a
 ` docker exec -it sqlserverdb /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "password@1234"
 
+
+##### Database Setup
+
 ```
-Database Setup
 cmd cd D:\Projects\eShopWithReact\src\Services\UserAuthentication\UserAuthentication.Infrastructure
 
 dotnet ef migrations add initialcreate -s ..\UserAuthentication.Api\UserAuthentication.Api.csproj
@@ -96,7 +99,7 @@ dotnet ef migrations add initialcreate -s ..\UserAuthentication.Api\UserAuthenti
 dotnet ef database update -s ..\UserAuthentication.Api\UserAuthentication.Api.csproj
 ```
 
-#### Some of the commnads that you can use
+##### Some of the commnads that you can use
 ```
 docker exec -it sqlserverdb /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "password1234"
 
@@ -114,7 +117,34 @@ EXEC sp_MSForEachTable 'SET QUOTED_IDENTIFIER ON; DELETE FROM AspNetUsers'
 GO
 ```
 
-**Web/Shop**
+**UserAuthentication.Core**
+>Install-Package AutoMapper
+>Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+>Install-Package Microsoft.AspNetCore.Identity
+>Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+
+**UserAuthentication.Infrastructure**
+>Install-Package Microsoft.AspNetCore.Identity
+>Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+>Install-Package Microsoft.EntityFrameworkCore.Design
+>Install-Package Microsoft.EntityFrameworkCore.SqlServer
+>Install-Package Microsoft.EntityFrameworkCore.Tools
+
+**UserAuthentication.Api**
+>Install-Package NLog
+>Install-Package Newtonsoft.Json
+>Install-Package Microsoft.AspNetCore.Identity
+>Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+>Install-Package Microsoft.AspNetCore.Identity.EntityFrameworkCore
+>Install-Package Microsoft.EntityFrameworkCore.Design
+>Install-Package Microsoft.EntityFrameworkCore.SqlServer
+>Install-Package Microsoft.EntityFrameworkCore.Tools
+>Install-Package Microsoft.VisualStudio.Web.CodeGeneration.Design
+
+#
+
+## Web/Shop
 
 >npm install --save react-bootstrap
 
