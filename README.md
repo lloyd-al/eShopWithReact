@@ -53,10 +53,66 @@ mongo                                    - name of the image to run;
 ` mongo --host localhost -u mongoadmin -p secret --authenticationDatabase admin `
 
 
-**MongoDB Set-up for the Catalog Database**
+\
+**ProductCatalog.Core**
+>Install-Package MongoDB.Driver
+>Install-Package MongoDB.Bson
+
+**ProductCatalog.Infrastructure**
+>Install-Package ServiceStack
+>Install-Package Microsoft.Extensions.Configuration
+>Install-Package MongoDB.Driver
+
+**ProductCatalog.Application**
+>Install-Package AutoMapper
+>Install-Package Microsoft.Extensions.DependencyInjection
+>Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+
+**ProductCatalog.Api**
+>Install-Package AspNetCore.HealthChecks.MongoDb
+>Install-Package NLog
+
+**ProductCatalog.Test**
+>Install-Package FluentAssertions
+>Install-Package Microsoft.AspNetCore.Mvc.Testing
+>Install-Package RESTFulSense
 
 #
+## User Authentication Service
 
+**SQL Server Set-up for the User Authentication Database**
+` docker pull mcr.microsoft.com/mssql/server
+
+` docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=password@1234" -p 2433:1433 --name sqlserverdb -d mcr.microsoft.com/mssql/server
+` docker ps -a
+` docker exec -it sqlserverdb /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "password@1234"
+
+```
+Database Setup
+cmd cd D:\Projects\eShopWithReact\src\Services\UserAuthentication\UserAuthentication.Infrastructure
+
+dotnet ef migrations add initialcreate -s ..\UserAuthentication.Api\UserAuthentication.Api.csproj
+
+dotnet ef database update -s ..\UserAuthentication.Api\UserAuthentication.Api.csproj
+```
+
+#### Some of the commnads that you can use
+```
+docker exec -it sqlserverdb /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "password1234"
+
+DROP DATABASE AuthenticationDB
+GO
+CREATE DATABASE AuthenticationDB
+GO
+SELECT Name from sys.Databases
+GO
+USE AuthenticationDB
+GO
+SELECT * FROM AuthenticationDB.INFORMATION_SCHEMA.TABLES;
+GO
+EXEC sp_MSForEachTable 'SET QUOTED_IDENTIFIER ON; DELETE FROM AspNetUsers'
+GO
+```
 
 **Web/Shop**
 
