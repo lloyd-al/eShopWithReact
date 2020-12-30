@@ -14,9 +14,26 @@ Authentication using IdentityServer4
 
 ![plot](./src/Web/Shop/ClientApp/src/assets/eShop-Website.PNG)
 
+## Common Library
 
-## MongoDB Set-up for the Catalog Database 
+**Common.Core**
+>Install-Package Microsoft.AspNetCore.Http.Features
+>Install-Package Newtonsoft.Json
 
+**Common.Infrastructure**
+>Install-Package Microsoft.EntityFrameworkCore
+>Install-Package MailKit
+>Install-Package NLog
+>Install-Package Microsoft.AspNetCore.Mvc.Versioning
+>Install-Package Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer
+>Install-Package Microsoft.AspNetCore.Mvc.ApiExplorer
+>Install-Package Swashbuckle.AspNetCore
+
+#
+
+## Product Catalog Service
+
+**MongoDB Set-up for the Catalog Database**
 
 ` docker pull mongo `
 
@@ -35,8 +52,10 @@ mongo                                    - name of the image to run;
 
 ` mongo --host localhost -u mongoadmin -p secret --authenticationDatabase admin `
 
+
+**MongoDB Set-up for the Catalog Database**
+
 #
-Following packages need to be installed in each project
 
 
 **Web/Shop**
