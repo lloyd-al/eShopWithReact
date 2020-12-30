@@ -1,0 +1,7 @@
+﻿const CategoryActionTypes = {
+    GET_ALL_CATEGORY_REQUEST: 'GET_ALL_CATEGORY_REQUEST',
+    GET_ALL_CATEGORY_SUCCESS: 'GET_ALL_CATEGORY_SUCCESS',
+    GET_ALL_CATEGORY_ERROR: 'GET_ALL_CATEGORY_ERROR'
+};
+
+export default CategoryActionTypes;

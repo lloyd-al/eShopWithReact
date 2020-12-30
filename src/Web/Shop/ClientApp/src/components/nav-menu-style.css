@@ -1,0 +1,28 @@
+﻿.header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    font-family: 'Comic Sans MS';
+}
+
+.nav-start {
+    width: 30%;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.nav-middle {
+    width: 65%;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.nav-last {
+    width: 30%;
+    align-items: center;
+    justify-content: flex-end;
+    color:black;
+    font-weight:bold;
+}
+

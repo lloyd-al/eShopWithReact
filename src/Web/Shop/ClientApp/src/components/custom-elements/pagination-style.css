@@ -1,0 +1,28 @@
+﻿
+.pagination {
+    margin-top: 0;
+    margin-bottom: 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+    .pagination page-item.active {
+        filter: saturate(darken(#ced4da, 50%), 5%) !important;
+        filter: saturate(lighten(#ced4da, 7.5%), 2.5%) !important;
+        border-color: #ced4da !important;
+    }
+
+.current-page {
+    font-size: 1.5rem;
+    vertical-align: middle;
+}
+
+.page-link {
+    padding: 0.75rem 1rem;
+    min-width: 3.5rem;
+    text-align: center;
+    box-shadow: none !important;
+    border-color: black !important;
+    color: lightgray;
+    font-weight: 900;
+    font-size: 1rem;
+}

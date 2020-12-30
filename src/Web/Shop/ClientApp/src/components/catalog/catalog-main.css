@@ -1,0 +1,24 @@
+﻿.product-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product-preview {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.product-preview_title {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.product-preview_body {
+    display: flex;
+    justify-content: space-between;
+}

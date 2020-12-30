@@ -1,0 +1,8 @@
+﻿.homepage {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 40px;
+    margin: 0;
+}
