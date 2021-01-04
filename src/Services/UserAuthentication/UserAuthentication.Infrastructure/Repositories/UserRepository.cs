@@ -104,26 +104,36 @@ namespace eShopWithReact.Services.UserAuthentication.Infrastructure.Repositories
 
             if (await _userManager.CheckPasswordAsync(user, authenticateRequest.Password))
             {
-                authenticationResponse.IsAuthenticated = true;
+                authenticationResponse = _mapper.Map<AuthenticateResponse>(user);
 
                 // authentication successful so generate jwt and refresh tokens
                 var jwtToken = await Task.Run(() => _tokenRepository.GenerateJwtToken(user));
-                var refreshToken = await Task.Run(() => _tokenRepository.GenerateRefreshToken(ipAddress));
-                user.RefreshTokens.Add(refreshToken);
-
-                // remove old refresh tokens from account
-                removeOldRefreshTokens(user);
-
-                _context.Update(user);
-                _context.SaveChanges();
-
-                authenticationResponse = _mapper.Map<AuthenticateResponse>(user);
                 authenticationResponse.Token = jwtToken;
-                authenticationResponse.RefreshToken = refreshToken.Token;
 
+                if (user.RefreshTokens.Any(a => a.IsActive))
+                {
+                    var activeRefreshToken = user.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
+                    authenticationResponse.RefreshToken = activeRefreshToken.Token;
+                    authenticationResponse.RefreshTokenExpiration = activeRefreshToken.Expires;
+                }
+                else
+                {
+                    var refreshToken = await Task.Run(() => _tokenRepository.GenerateRefreshToken(ipAddress));
+                    authenticationResponse.RefreshToken = refreshToken.Token;
+                    authenticationResponse.RefreshTokenExpiration = refreshToken.Expires;
+                    user.RefreshTokens.Add(refreshToken);
+
+                    // remove old refresh tokens from account
+                    removeOldRefreshTokens(user);
+
+                    _context.Update(user);
+                    _context.SaveChanges();
+                }
+                
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 authenticationResponse.Roles = rolesList.ToList();
 
+                authenticationResponse.IsAuthenticated = true;
                 return authenticationResponse;
             }
 
@@ -166,10 +176,14 @@ namespace eShopWithReact.Services.UserAuthentication.Infrastructure.Repositories
                 return authenticateResponse;
             }
 
-            // replace old refresh token with a new one and save
-            var newRefreshToken = _tokenRepository.GenerateRefreshToken(ipAddress);
+            
+            //Revoke Current Refresh Token
             refreshToken.Revoked = DateTime.UtcNow;
             refreshToken.RevokedByIp = ipAddress;
+
+            // replace old refresh token with a new one and save
+            var newRefreshToken = _tokenRepository.GenerateRefreshToken(ipAddress);
+
             refreshToken.ReplacedByToken = newRefreshToken.Token;
             user.RefreshTokens.Add(newRefreshToken);
 
@@ -178,15 +192,17 @@ namespace eShopWithReact.Services.UserAuthentication.Infrastructure.Repositories
             _context.Update(user);
             _context.SaveChanges();
 
+            authenticateResponse = _mapper.Map<AuthenticateResponse>(user);
             // generate new jwt
             var jwtToken = await _tokenRepository.GenerateJwtToken(user);
-
-            authenticateResponse = _mapper.Map<AuthenticateResponse>(user);
-            authenticateResponse.IsAuthenticated = true;
             authenticateResponse.Token = jwtToken;
+
             authenticateResponse.RefreshToken = newRefreshToken.Token;
+            authenticateResponse.RefreshTokenExpiration = newRefreshToken.Expires;
+
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             authenticateResponse.Roles = rolesList.ToList();
+            authenticateResponse.IsAuthenticated = true;
             return authenticateResponse;
         }
 

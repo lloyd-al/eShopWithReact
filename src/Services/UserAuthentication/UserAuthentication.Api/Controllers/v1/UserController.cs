@@ -12,7 +12,8 @@ using eShopWithReact.Common.Core.Interfaces;
 using eShopWithReact.Services.UserAuthentication.Core.Entities;
 using eShopWithReact.Services.UserAuthentication.Core.Interfaces;
 using eShopWithReact.Services.UserAuthentication.Core.Models;
-
+using eShopWithReact.Services.UserAuthentication.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 
 namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
 {
@@ -23,17 +24,20 @@ namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly JwtSettings _jwt;
 
         public UserController(
             IUserRepository userRepository, 
             UserManager<ApplicationUser> userManager, 
             IMapper mapper, IEmailService emailService, 
-            ILoggerManager logger) : base(logger)
+            ILoggerManager logger,
+            IOptions<JwtSettings> jwt) : base(logger)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _mapper = mapper;
             _emailService = emailService;
+            _jwt = jwt.Value;
         }
 
 
@@ -66,7 +70,7 @@ namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
             }
 
             AuthenticateResponse response = await _userRepository.Authenticate(request, ipAddress());
-            setTokenCookie(response.RefreshToken);
+            SetRefreshTokenInCookie(response.RefreshToken);
             return Ok(response);
         }
 
@@ -83,7 +87,7 @@ namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
             var refreshToken = Request.Cookies["refreshToken"];
             AuthenticateResponse response = await _userRepository.RefreshToken(refreshToken, ipAddress());
             if (!string.IsNullOrEmpty(response.RefreshToken))
-                setTokenCookie(response.RefreshToken);
+                SetRefreshTokenInCookie(response.RefreshToken);
             return Ok(response);
         }
 
@@ -190,7 +194,7 @@ namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
             return Ok(new { message = "Account deleted successfully" });
         }
 
-        // Helper methods
+        // ######################################## HELPER METHODS ###############################################
 
         private async Task sendVerificationEmail(RegisterResponse requestResponse)
         {
@@ -253,12 +257,12 @@ namespace eShopWithReact.Services.UserAuthentication.Api.Controllers.v1
         /// the refresh token can only be used to fetch a new token from the /accounts/refresh-token route which prevents CSRF (cross site request forgery).
         /// </summary>
         /// <param name="token"></param>
-        private void setTokenCookie(string token)
+        private void SetRefreshTokenInCookie(string token)
         {
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7)
+                Expires = DateTime.UtcNow.AddDays(_jwt.RefreshTokenTTL)
             };
             Response.Cookies.Append("refreshToken", token, cookieOptions);
         }

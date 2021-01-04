@@ -13,7 +13,6 @@ namespace eShopWithReact.Services.UserAuthentication.Core.Models
     public class AuthenticateResponse
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -24,5 +23,6 @@ namespace eShopWithReact.Services.UserAuthentication.Core.Models
 
         [JsonIgnore] // refresh token is returned in http only cookie
         public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiration { get; set; }
     }
 }
