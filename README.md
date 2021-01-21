@@ -190,6 +190,57 @@ GO
 
 #
 
+## Basket Service
+
+**Redis Set-up for the Basket Database**
+
+
+` docker pull redis `
+
+` docker run -d --name eshop-redis -p 6379:6379 redis `
+
+` docker exec -it eshop-redis /bin/bash `
+
+` redis-cli `
+
+
+**Basket.Core**
+>Install-Package StackExchange.Redis
+
+
+#
+**Basket.Infrastructure**
+
+>Install-Package Microsoft.EntityFrameworkCore
+
+>Install-Package Microsoft.Extensions.Configuration
+
+>Install-Package Microsoft.Extensions.Options
+
+>Install-Package Newtonsoft.Json
+
+>Install-Package StackExchange.Redis
+
+
+#
+**Basket.Application**
+
+>Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+
+
+#
+**Basket.API**
+
+>Install-Package Swashbuckle.AspNetCore
+
+>Install-Package NLog.Config
+
+>Install-Package Microsoft.AspNetCore.Mvc.Versioning
+
+>Install-Package AutoMapper.Extensions.Microsoft.DependencyInjection
+
+#
+
 ## Web/Shop
 
 >npm install --save react-bootstrap
@@ -205,6 +256,14 @@ GO
 >npm install --save axios
 
 >npm install --save react-stripe-checkout
+
+>npm install --save formik
+
+>npm install --save yup
+
+>npm install --save react-toastify
+
+>npm install --save rxjs
 
 #
 
