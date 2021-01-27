@@ -49,6 +49,15 @@ Authentication using IdentityServer4
 
 #
 
+## ApiGateway
+
+**ApiGateway.Web**
+
+>Install-Package Ocelot
+
+
+#
+
 ## Product Catalog Service
 
 **MongoDB Set-up for the Catalog Database**
@@ -263,7 +272,7 @@ GO
 #
 ## Ordering Project
 
-**SQL Server Set-up for the User Authentication Database**
+**SQL Server Set-up for the Ordering Database**
 
 ` You can use the same DB as used for Authentication for Development ` 
 
