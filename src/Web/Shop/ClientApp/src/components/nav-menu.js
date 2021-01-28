@@ -26,6 +26,8 @@ const NavMenu = ({ hidden }) => {
         }
     }, [user, fullName]);
 
+
+
     const handleClose = () => {
         setUser(AuthenticationService.userValue);
         setShow(false);

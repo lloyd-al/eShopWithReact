@@ -14,7 +14,7 @@ const AuthPage = params => {
                         case "signup": return <SignUp setName={setName} handleClose={params.handleClose} />;
                         case "forgot": return <ForgotPassword setName={setName} handleClose={params.handleClose} />;
                         case "reset": return <ResetPassword setName={setName} handleClose={params.handleClose} />;
-                        default: return <SignIn setName={setName} setName={setName} handleClose={params.handleClose} />;
+                        default: return <SignIn setName={setName} handleClose={params.handleClose} />;
                     }
                 })()}
             </div>

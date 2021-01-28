@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+    catalogdb:
+        container_name: catalogapi
+        restart: always
+        volumes:
+            #- ${WEBAPP_STORAGE_HOME}/site:/data/db
+            - ./mongo-volume:/data/db
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mongoadmin
+            MONGO_INITDB_ROOT_PASSWORD: secret
+            ONGO_INITDB_DATABASE: CatalogDb
+        ports:
+            - "27017:27017"
+
+    productcatalog.api:
+        container_name: catalogapi
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=https://+:443;http://+:80
+            - "CatalogDatabaseSetting:ConnectionString=mongodb://mongoadmin:secret@catalogdb:27017/"
+        depends_on:
+            - catalogdb
+        ports:
+            - "8000:80"
+            - "443"
+        volumes:
+            - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+            - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

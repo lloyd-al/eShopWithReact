@@ -80,14 +80,32 @@ function authHeader() {
 //response interceptor to refresh token on receiving token expired error
 axios.interceptors.response.use(
     (response) => {
+        // Return a successful response back to the calling service
         return response;
     },
     function (error) {
+        // Return any error which is not due to authentication back to the calling service
+        if (error.response.status !== 401) {
+            return new Promise((resolve, reject) => {
+                reject(error);
+            });
+        }
+
+        // Logout user if token refresh didn't work or user is disabled
+        if (error.config.url == '/refresh-token' || error.response.message == 'Account is disabled.') {
+
+            //TokenStorage.clear();
+
+            return new Promise((resolve, reject) => {
+                reject(error);
+            });
+        }
+
         const originalRequest = error.config;
         let refreshToken = localStorage.getItem("refreshToken");
         if (
             refreshToken &&
-            [401, 403].includes(error.response.status) &&
+            [401].includes(error.response.status) &&
             !originalRequest._retry
         ) {
             originalRequest._retry = true;
